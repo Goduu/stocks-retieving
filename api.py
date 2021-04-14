@@ -67,6 +67,10 @@ def token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+@app.route('/')
+def main():
+    return jsonify({'msg': 'Welcome to the stocks-retrieve api!'})
+
 
 @app.route('/api/login', methods=['GET', 'POST'])
 def login():
