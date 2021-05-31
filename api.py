@@ -1,5 +1,5 @@
 from flask import Flask,jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import stocks_requests as rq
 import json
 import jwt
@@ -78,6 +78,7 @@ def token_required(f):
 #     return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'})
 
 @app.route('/api/login', methods=['GET', 'POST'])
+@cross_origin()
 def login():
     # print("data",request.get_json())
     data = json.loads(request.get_json()['data'])
@@ -99,7 +100,7 @@ def login():
 
 
 
-
+@cross_origin()
 @app.route('/api/post_grid_elements', methods=['GET', 'POST'])
 def post_grid_elements():
     # print("data",request.get_json())
@@ -108,13 +109,14 @@ def post_grid_elements():
     # res = validate_password(data.get('user'), data.get('password'))
     return jsonify({"msg":"ok"})
 
+@cross_origin()
 @app.route('/api/fetchGridElements', methods=['GET','POST'])
 def get_grid_elements_():
     user = json.loads(request.get_json()['data'])['user']
    
     return jsonify(get_grid_elements(user))
 
-
+@cross_origin()
 @app.route('/api/add_user', methods=['GET','POST'])
 def add_user_():
     data = json.loads(request.get_json()['data'])
@@ -123,7 +125,7 @@ def add_user_():
     return jsonify(res)                   
     
 
-
+@cross_origin()
 @app.route('/api/getTickers/', methods=['GET'])
 # @token_required
 def get_tickers_():
@@ -134,6 +136,7 @@ def get_tickers_():
     print("get_live_price", page, search,exchange)
     return jsonify(get_tickers(page,exchange,search))
 
+@cross_origin()
 @app.route('/api/getUserIdentifiers/', methods=['GET'])
 # @token_required
 def get_grids_identifiers_():
@@ -141,6 +144,7 @@ def get_grids_identifiers_():
     user = request.args.get('user')
     return get_grids_identifiers(user)
 
+@cross_origin()
 @app.route('/api/priceData/', methods=['GET'])
 # @token_required
 def get_price_data():
@@ -149,7 +153,7 @@ def get_price_data():
     print("get_live_price", tick,period, request.args)
     return rq.get_price_data(tick,period)
 
-
+@cross_origin()
 @app.route('/api/dividendData/', methods=['GET'])
 # @token_required
 def get_dividend_data():
@@ -158,7 +162,7 @@ def get_dividend_data():
     print("dividendData", tick,period)
     return rq.get_dividend_data(tick,period)
 
-
+@cross_origin()
 @app.route('/api/price/')
 @token_required
 def get_live_price():
@@ -167,6 +171,7 @@ def get_live_price():
     print("get_live_price")
     return rq.get_live_price(tick)
 
+@cross_origin()
 @app.route('/api/analyst-info/')
 @token_required
 def get_analysts_info():
@@ -174,6 +179,7 @@ def get_analysts_info():
     print("get_current_time")
     return rq.get_analysts_info(tick)
 
+@cross_origin()
 @app.route('/api/data/')
 @token_required
 def get_data():
@@ -221,7 +227,7 @@ if __name__ == '__main__':
     app.config['DEBUG'] = True
     # app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
     app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
-    CORS(app, origins = ["http://localhost:3000","http://localhost:5000", "https://stocks-studies-api.herokuapp.com/" ])
+    CORS(app) #, origins = ["http://localhost:3000","http://localhost:5000", "https://stocks-studies-api.herokuapp.com/" ])
     app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 5000))
     # app.run(host='0.0.0.0')
     # socketio.run(app,port=5000, host='0.0.0.0')
