@@ -20,7 +20,7 @@ def get_db():
     Configuration method to return db instance
     """
     db = getattr(g, "_database", None)
-    MFLIX_DB_URI = os.environ.get('MONGODB_URI')
+    MFLIX_DB_URI = os.environ.get('MONGODB_URI') or current_app.config["MFLIX_DB_URI"]
     MFLIX_DB_NAME = 'application'
     if db is None:
         db = g._database = MongoClient(
