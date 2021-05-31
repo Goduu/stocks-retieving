@@ -221,10 +221,8 @@ if __name__ == '__main__':
     app.config['DEBUG'] = True
     # app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
     app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
-    CORS(app, origins = "http://https://stocks-studies-frontend.herokuapp.com/")
-    app.run(host='0.0.0.0')
-    # app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
-
+    CORS(app, origins = "http://localhost:3000")
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
     # socketio.run(app,port=5000, host='0.0.0.0')
 
 # if __name__ == "__main__":
