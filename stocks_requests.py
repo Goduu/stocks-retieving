@@ -68,23 +68,26 @@ def get_price_data(tick,period):
     return jsonify({'data':resp})
 
 def get_dividend_data(tick,period):
-    end_date = datetime.today()
-    delta = timedelta(days=int(period))
-    start_date = (end_date-delta)
-    end_date = end_date
-    if(int(period)<0):
-        data = yf.get_dividends(tick)
-    else:
-        data = yf.get_dividends(tick, start_date = start_date, end_date = end_date)
-    resp = []
-    for idx,value in enumerate(data.dividend):
-        resp.append(
-            {
-                'timestamp': datetime.timestamp(data.index[idx]),
-                'value': value
-            }
-        )
-    return jsonify({'data':resp})
+    try:
+        end_date = datetime.today()
+        delta = timedelta(days=int(period))
+        start_date = (end_date-delta)
+        end_date = end_date
+        if(int(period)<0):
+            data = yf.get_dividends(tick)
+        else:
+            data = yf.get_dividends(tick, start_date = start_date, end_date = end_date)
+        resp = []
+        for idx,value in enumerate(data.dividend):
+            resp.append(
+                {
+                    'timestamp': datetime.timestamp(data.index[idx]),
+                    'value': value
+                }
+            )
+        return jsonify({'data':resp})
+    except:
+        return jsonify({"msg": "No Dividend Data for " + tick})
 
 @except_handler
 def get_dividends(tick):

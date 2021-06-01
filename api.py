@@ -4,7 +4,8 @@ import stocks_requests as rq
 import json
 import jwt
 from functools import wraps
-from db import add_user, validate_password,save_grid_elements,get_grid_elements,save_tickers,get_tickers, get_grids_identifiers
+from db import add_user, validate_password, save_grid_elements, get_grid_elements, \
+    save_tickers, get_tickers, get_grids_identifiers, delete_grid
 #--------
 import os
 
@@ -117,6 +118,13 @@ def get_grid_elements_():
     return jsonify(get_grid_elements(user))
 
 @cross_origin()
+@app.route('/api/deleteGrid', methods=['DELETE'])
+def delete_grid_():
+    user = request.get_json()['user']
+    identifier = request.get_json()['identifier']
+    return delete_grid(user, identifier)
+
+@cross_origin()
 @app.route('/api/add_user', methods=['GET','POST'])
 def add_user_():
     data = json.loads(request.get_json()['data'])
@@ -187,13 +195,6 @@ def get_data():
     print("get data")
     return rq.get_data(tick)
 
-@app.route('/api/dividends/')
-@token_required
-def get_dividends():
-    tick = request.args.get('tick')
-    print("get_dividends")
-    return rq.get_dividends(tick)
-
 @app.route('/api/quote_data/')
 # @token_required
 def get_quote_data():
@@ -228,7 +229,7 @@ if __name__ == '__main__':
     # app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
     app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
     CORS(app) #, origins = ["http://localhost:3000","http://localhost:5000", "https://stocks-studies-api.herokuapp.com/" ])
-    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))
     # app.run(host='0.0.0.0')
     # socketio.run(app,port=5000, host='0.0.0.0')
 

@@ -130,7 +130,6 @@ def get_grids_identifiers(user):
         resp = db.grids.find(
             {"user": user},
             {"identifier":1, "_id":0}
-        
         )
         return jsonify(dumps(resp))
     except Exception as e:
@@ -157,11 +156,7 @@ def save_tickers(exchange):
                     'exchange': exchange
                 } } )
         result = bulk.execute()
-        print('nUpserted', result['nUpserted'], \
-            'writeConcernErrors', result['writeConcernErrors'], \
-            'nInserted', result['nInserted'], \
-            'nMatched', result['nMatched'], \
-            'nModified', result['nModified'])
+    
         return {"success": True}
     except DuplicateKeyError:
         return {"error": "A user with the given email already exists."}
@@ -237,6 +232,24 @@ def add_user(name, email, hashedpw):
         return {"success": True}
     except DuplicateKeyError:
         return {"error": "A user with the given email already exists."}
+
+def delete_grid(user, identifier):
+    """
+    Given a user, and identifier, delets a document with those credentials
+    to the `grids` collection.
+    """
+    try:
+        grid = {
+            "user": user,
+            "identifier": identifier
+            }
+        res = db.grids.with_options(write_concern=WriteConcern(w="majority")).delete_one(grid)
+        if(res.acknowledged == True):
+           return {"msg": "success"}
+        else:
+           return {"msg": "error"}
+    except Exception as e:
+        return {"error": e}
 
 
 def login_user(email, jwt):
