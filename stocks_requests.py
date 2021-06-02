@@ -7,6 +7,7 @@ from datetime import timedelta
 from datetime import datetime
 from functools import wraps
 import sys
+from yahoo_fin.news import get_yf_rss
 
 def except_handler(f):
     @wraps(f)
@@ -94,6 +95,13 @@ def get_dividends(tick):
     print("in get dividends", tick)
     data = yf.get_dividends(tick).iloc[-10:]
     return data.to_json()
+
+@except_handler
+def get_news(tick):
+    news = get_yf_rss(tick)
+    
+    return(jsonify({'msg': 'ok'}))
+
 
 @except_handler
 def get_quote_data(ticker):

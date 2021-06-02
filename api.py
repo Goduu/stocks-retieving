@@ -8,6 +8,7 @@ from db import add_user, validate_password, save_grid_elements, get_grid_element
     save_tickers, get_tickers, get_grids_identifiers, delete_grid
 #--------
 import os
+from news_requests import fetch_news
 
 from flask import Flask
 import configparser
@@ -195,6 +196,13 @@ def get_data():
     print("get data")
     return rq.get_data(tick)
 
+@cross_origin()
+@app.route('/api/fetchNews/')
+def get_news():
+    tick = request.args.get('tick')
+    print("get_news")
+    return fetch_news(tick)
+    
 @app.route('/api/quote_data/')
 # @token_required
 def get_quote_data():
