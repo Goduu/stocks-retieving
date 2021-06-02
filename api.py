@@ -93,9 +93,7 @@ def token_required(f):
 @app.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
 def login():
-    # print("data",request.get_json())
     data = json.loads(request.get_json()['data'])
-    print("EM PASS",data.get('user'), data.get('password'))
     res = validate_password(data.get('user'), data.get('password'))
     return res
     
@@ -116,7 +114,6 @@ def login():
 @cross_origin()
 @app.route('/api/post_grid_elements', methods=['GET', 'POST'])
 def post_grid_elements():
-    # print("data",request.get_json())
     data = json.loads(request.get_json()['data'])
     save_grid_elements(data.get('id'), data.get('user'), data.get('grid'), data.get('layout'))
     # res = validate_password(data.get('user'), data.get('password'))
@@ -140,7 +137,6 @@ def delete_grid_():
 @app.route('/api/add_user', methods=['GET','POST'])
 def add_user_():
     data = json.loads(request.get_json()['data'])
-    print(data)
     res = add_user("test", data.get('email'), data.get('password'))
     # msg = Message(subject="Hello",
     #                   sender='sotck.studies.activation@gmail.com',
@@ -234,12 +230,6 @@ def get_user_data():
     print("get_user_data", user.email,user.username)
     return jsonify({'ok': 'ok'})
 
-@app.route('/api/get_earnings_history/')
-@token_required
-def get_earnings_history():
-    tick = request.args.get('tick')
-    print("get_earns_history",tick)
-    return jsonify(rq.get_earnings_history_(tick))
 
 
 

@@ -99,7 +99,6 @@ def get_grid_elements(user):
         )
         dashboards = []
         for el in resp:
-            print("/////////////////////////////////////////////////////", el)
             grid_elements = []
             layout = []
             for g in el.get('grid_elements'):
