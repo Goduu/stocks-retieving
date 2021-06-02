@@ -8,11 +8,12 @@ from db import add_user, validate_password, save_grid_elements, get_grid_element
     save_tickers, get_tickers, get_grids_identifiers, delete_grid
 #--------
 import os
-from news_requests import fetch_news
+from news_requests import fetch_news_gnews
 
 from flask import Flask
 import configparser
 from factory import create_app
+# from flask_mail import Mail, Message
 
 config = configparser.ConfigParser()
 config.read(os.path.abspath(os.path.join(".ini")))
@@ -22,6 +23,16 @@ config.read(os.path.abspath(os.path.join(".ini")))
 
 app = create_app()
 app = Flask(__name__, static_folder='./build', static_url_path='/')
+
+# mail_settings = {
+#     "MAIL_SERVER": 'smtp.gmail.com',
+#     "MAIL_PORT": 465,
+#     "MAIL_USE_TLS": False,
+#     "MAIL_USE_SSL": True,
+#     "MAIL_USERNAME": 'stock.studies.activation@gmail.com', #os.environ['EMAIL_USER'],
+#     "MAIL_PASSWORD": '1q2w3e4r5t6yZ'#os.environ['EMAIL_PASSWORD']
+# }
+# mail = Mail(app)
 
 # Create a user to test with
 # @app.before_first_request
@@ -131,6 +142,11 @@ def add_user_():
     data = json.loads(request.get_json()['data'])
     print(data)
     res = add_user("test", data.get('email'), data.get('password'))
+    # msg = Message(subject="Hello",
+    #                   sender='sotck.studies.activation@gmail.com',
+    #                   recipients=[data.get('email')], # replace with your email for testing
+    #                   body="This is a test email I sent with Gmail and Python!")
+    # mail.send(msg)
     return jsonify(res)                   
     
 
@@ -201,7 +217,7 @@ def get_data():
 def get_news():
     tick = request.args.get('tick')
     print("get_news")
-    return fetch_news(tick)
+    return fetch_news_gnews(tick)
     
 @app.route('/api/quote_data/')
 # @token_required
