@@ -127,6 +127,14 @@ def get_grid_elements_():
     return jsonify(get_grid_elements(user))
 
 @cross_origin()
+@app.route('/api/indicators/', methods=['GET'])
+# @token_required
+def get_indicators():
+    tick = request.args.get('tick')
+    print("get_indicators", tick)
+    return rq.get_quote_indicators(tick)
+    
+@cross_origin()
 @app.route('/api/deleteGrid', methods=['DELETE'])
 def delete_grid_():
     user = request.get_json()['user']
